@@ -1,6 +1,6 @@
 import torch
 from .dataset import Conversations
-from .models import Generator
+from .models import AudioGenerator,TextPredictor
 
 class Uwu:
     def __init__(self,config):
@@ -9,15 +9,19 @@ class Uwu:
         self.lr = config.lr
         self.device = config.device
         self.dataset = Conversations()
-        self.model = Generator().to(self.device)
+        self.audio_generator = AudioGenerator().to(self.device)
+        self.text_predictor = TextPredictor().to(self.device)
 
 
-    def generate(self,texts):
-        audio  = self.model(texts)
+    def generate_audio(self,texts):
+        audio  = self.audio_generator(texts)
         return audio
+    
+    def predict_text(self,audio):
+        pass
 
     def train(self):
-        optimizer = torch.optim.Adam(self.model.parameters(),lr=self.lr)
+        optimizer = torch.optim.Adam(self.audio_generator.parameters(),lr=self.lr)
         loss_fn = torch.nn.CrossEntropyLoss()
         
 
@@ -27,5 +31,7 @@ class Uwu:
 
             print(f"Epoch {epoch} done...")
 
-    def load_pretrained(self,name=''):
+    def download_pretrained(self,name=''):
         pass
+
+    
